@@ -1,0 +1,74 @@
+modules:
+  # 1. ADMIN AYARLARI
+  jira:adminPage:
+    - key: crewradar-admin
+      resource: main
+      resolver:
+        function: resolver
+      title: CrewRadar Settings
+      layout: basic
+      icon: https://profileinfojpg.blob.core.windows.net/test/3232.png # küçük kare icon
+
+  # 2. GLOBAL DASHBOARD
+  jira:globalPage:
+    - key: crewradar-dashboard
+      resource: main
+      resolver:
+        function: resolver
+      title: CrewRadar Status
+      label: CrewRadar Status
+      icon: https://profileinfojpg.blob.core.windows.net/test/3232.png
+
+  # 3. ISSUE PANEL
+  jira:issuePanel:
+    - key: crewradar-panel
+      resource: main
+      resolver:
+        function: resolver
+      title: CrewRadar Context
+      icon: https://profileinfojpg.blob.core.windows.net/test/3232.png
+
+  # 4. TRIGGER
+  trigger:
+    - key: auto-assign-trigger
+      function: autoAssignFunction
+      events:
+        - avi:jira:created:issue
+        - avi:jira:updated:issue
+        - avi:jira:viewed:issue
+
+  # FONKSİYONLAR
+  function:
+    - key: resolver
+      handler: index.handler
+    - key: autoAssignFunction
+      handler: index.runAutoAssign
+
+resources:
+  - key: main
+    path: static/hello-world/build
+
+permissions:
+  scopes:
+    - read:jira-work
+    - write:jira-work
+    - read:jira-user
+    - read:group:jira
+    - manage:jira-configuration
+    - read:project:jira
+    - read:servicedesk-request
+    - storage:app
+  external:
+    fetch:
+      backend:
+        - 'https://login.microsoftonline.com'
+        - 'https://graph.microsoft.com'
+
+app:
+  runtime:
+    name: nodejs24.x
+    memoryMB: 256
+    architecture: arm64
+  id: ari:cloud:ecosystem::app/f5a353fc-c471-45b6-a769-9050580ca1c7
+  # opsiyonel, app-level ikon:
+  # icon: https://your-static-host/crewradar-logo-icon.png
